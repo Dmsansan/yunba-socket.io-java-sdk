@@ -31,7 +31,7 @@ public class BasicExample implements IOCallback {
 
 	public BasicExample() throws Exception {
 		socket = new SocketIO();
-		socket.connect("http://127.0.0.1:3001/", this);
+		socket.connect("http://sock.yunba.io:3000/", this);
 
 		// Sends a string to the server.
 		socket.send("Hello Server");
@@ -77,5 +77,13 @@ public class BasicExample implements IOCallback {
 	@Override
 	public void on(String event, IOAcknowledge ack, Object... args) {
 		System.out.println("Server triggered event '" + event + "'");
+		if (event.equals("socketconnectack")) {
+			onSocketConnectAck();
+		}
+	}
+
+	public void onSocketConnectAck() {
+		System.out.println("onSocketConnectAck");
+		// emit connect
 	}
 }
