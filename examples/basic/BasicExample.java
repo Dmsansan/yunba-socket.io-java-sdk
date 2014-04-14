@@ -77,13 +77,25 @@ public class BasicExample implements IOCallback {
 	@Override
 	public void on(String event, IOAcknowledge ack, Object... args) {
 		System.out.println("Server triggered event '" + event + "'");
-		if (event.equals("socketconnectack")) {
-			onSocketConnectAck();
-		}
+        try {
+            if (event.equals("socketconnectack")) {
+                onSocketConnectAck();
+            } else if (event.equals("connack")) {
+                onConnAck();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 
-	public void onSocketConnectAck() {
+	public void onSocketConnectAck() throws Exception {
 		System.out.println("onSocketConnectAck");
 		// emit connect
+
+        socket.emit("connect", new JSONObject("{'appkey': '52fcc04c4dc903d66d6f8f92'}"));
 	}
+
+    public void onConnAck() {
+        System.out.println("onConnAck");
+    }
 }

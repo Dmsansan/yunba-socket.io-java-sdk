@@ -34,6 +34,14 @@ ant jar
 mv jar/socketio.jar /path/to/your/libs/project
 ```
 
+### Try Yunba Example
+
+```bash
+cd examples
+javac -cp ../jar/socketio.jar basic/BasicExample.java
+java -cp ../jar/socketio.jar:. basic.BasicExample
+```
+
 If you're using ant, change your build.xml to include socketio.jar. If you're eclipse, add the jar to your project buildpath.
 
 Afterwards, you'll be able to use this library: 
