@@ -15,8 +15,15 @@ import io.socket.SocketIOException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.Exception;
+import java.lang.Object;
+import java.lang.System;
+
 public class BasicExample implements IOCallback {
 	private SocketIO socket;
+
+    /* 从 yunba.io 获取应用的 appkey */
+    private static String APPKEY = "52fcc04c4dc903d66d6f8f92";
 
 	/**
 	 * @param args
@@ -32,16 +39,6 @@ public class BasicExample implements IOCallback {
 	public BasicExample() throws Exception {
 		socket = new SocketIO();
 		socket.connect("http://sock.yunba.io:3000/", this);
-
-		// Sends a string to the server.
-		socket.send("Hello Server");
-
-		// Sends a JSON object to the server.
-		socket.send(new JSONObject().put("key", "value").put("key2",
-				"another value"));
-
-		// Emits an event to the server.
-		socket.emit("event", "argument1", "argument2", 13.37);
 	}
 
 	@Override
@@ -77,11 +74,14 @@ public class BasicExample implements IOCallback {
 	@Override
 	public void on(String event, IOAcknowledge ack, Object... args) {
 		System.out.println("Server triggered event '" + event + "'");
+
         try {
             if (event.equals("socketconnectack")) {
                 onSocketConnectAck();
             } else if (event.equals("connack")) {
-                onConnAck();
+                onConnAck((JSONObject)args[0]);
+            } else if (event.equals("puback")) {
+                onPubAck((JSONObject)args[0]);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,12 +90,18 @@ public class BasicExample implements IOCallback {
 
 	public void onSocketConnectAck() throws Exception {
 		System.out.println("onSocketConnectAck");
-		// emit connect
 
-        socket.emit("connect", new JSONObject("{'appkey': '52fcc04c4dc903d66d6f8f92'}"));
+		// emit connect
+        socket.emit("connect", new JSONObject("{'appkey': '" + APPKEY + "'}"));
 	}
 
-    public void onConnAck() {
-        System.out.println("onConnAck");
+    public void onConnAck(JSONObject json) throws Exception {
+        System.out.println("onConnAck success " + json.get("success"));
+
+        socket.emit("publish", new JSONObject("{'topic': 't1', 'msg': 'hello form java socket.io client', 'qos': 1}"));
+    }
+
+    public void onPubAck(JSONObject json) throws Exception {
+        System.out.println("conPubAck success " + json.get("success") + " msg id " + json.get("messageId"));
     }
 }

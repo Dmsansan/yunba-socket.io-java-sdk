@@ -34,7 +34,7 @@ ant jar
 mv jar/socketio.jar /path/to/your/libs/project
 ```
 
-### Try Yunba Example
+### yunba.io socket.io API 例子
 
 ```bash
 cd examples
