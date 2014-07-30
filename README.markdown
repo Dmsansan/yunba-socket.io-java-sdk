@@ -28,13 +28,20 @@ Using socket.io-java-client is quite simple. But lets see:
 Checkout and compile the project:
 
 ``` bash
-git clone git://github.com/Gottox/socket.io-java-client.git
+git clone https://github.com/yunba/yunba-socket.io-java-sdk.git
 cd socket.io-java-client
 ant jar
 mv jar/socketio.jar /path/to/your/libs/project
 ```
 
 ### yunba.io socket.io API 例子
+
+注意在使用前，编辑 `examples/basic/BasicExample.java`，把 APPKEY 换成你自己的。
+
+```java
+/* 从 yunba.io 获取应用的 appkey */
+private static String APPKEY = "52fcc04c4dc903d66d6f8f92";
+```
 
 ```bash
 cd examples
