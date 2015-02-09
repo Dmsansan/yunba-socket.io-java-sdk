@@ -169,7 +169,7 @@ class IOConnection implements IOCallback {
 		 */
 		@Override
 		public void run() {
-            handshake();
+                        handshake();
 			connectTransport();
 			if (!keepAliveInQueue) {
 				sendPlain("2::");
@@ -294,7 +294,7 @@ class IOConnection implements IOCallback {
 		URL url;
 		String response;
 		URLConnection connection;
-        int oldState = IOConnection.this.getState();
+                int oldState = IOConnection.this.getState();
 		try {
 			setState(STATE_HANDSHAKE);
 			url = new URL(IOConnection.this.url.toString() + SOCKET_IO_1);
@@ -321,8 +321,8 @@ class IOConnection implements IOCallback {
 			closingTimeout = Long.parseLong(data[2]) * 1000;
 			protocols = Arrays.asList(data[3].split(","));
 		} catch (Exception e) {
-            if (oldState == STATE_INIT)
-                error(new SocketIOException("Error while handshaking", e));
+                if (oldState == STATE_INIT)
+                        error(new SocketIOException("Error while handshaking", e));
 		}
 	}
 
