@@ -18,6 +18,11 @@ import org.json.JSONObject;
 import java.lang.Exception;
 import java.lang.Object;
 import java.lang.System;
+import java.util.List;
+import java.nio.charset.Charset;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.nio.file.Paths;
 
 public class BasicExample implements IOCallback {
 	private SocketIO socket;
@@ -91,12 +96,27 @@ public class BasicExample implements IOCallback {
 	public void onSocketConnectAck() throws Exception {
 		System.out.println("onSocketConnectAck");
 
-		// emit connect
-        socket.emit("connect", new JSONObject("{'appkey': '" + APPKEY + "'}"));
+        try {
+            List<String> file = java.nio.file.Files.readAllLines(Paths.get("sessionid.dat"), Charset.defaultCharset());
+            String sessionId = file.get(0);
+            socket.emit("connect", new JSONObject("{'sessionid': '" + sessionId + "'}"));
+        } catch (IOException e) {
+            // emit connect
+            socket.emit("connect", new JSONObject("{'appkey': '" + APPKEY + "'}"));
+        }
 	}
 
     public void onConnAck(JSONObject json) throws Exception {
         System.out.println("onConnAck success " + json.get("success"));
+
+        if (json.getBoolean("success")) {
+            try {
+                String sessionId = json.getString("sessionid");
+                PrintWriter writer = new PrintWriter("sessionid.dat", Charset.defaultCharset().name());
+                writer.println(sessionId);
+                writer.close();
+            } catch (Exception e) {}
+        }
 
         socket.emit("publish", new JSONObject("{'topic': 't1', 'msg': 'hello form java socket.io client', 'qos': 1}"));
     }
