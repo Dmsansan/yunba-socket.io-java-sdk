@@ -101,7 +101,7 @@ public class BasicExample implements IOCallback {
         try {
             List<String> file = java.nio.file.Files.readAllLines(Paths.get("customid.dat"), Charset.defaultCharset());
             customId = file.get(0);
-        } catch (IOException e) {
+        } catch (Exception e) {
             customId = UUID.randomUUID().toString();
         }
 
