@@ -29,7 +29,7 @@ Checkout and compile the project:
 
 ``` bash
 git clone https://github.com/yunba/yunba-socket.io-java-sdk.git
-cd socket.io-java-client
+cd yunba-socket.io-java-sdk
 ant jar
 mv jar/socketio.jar /path/to/your/libs/project
 ```
