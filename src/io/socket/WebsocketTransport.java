@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
-import org.java_websocket.client.DefaultSSLWebSocketClientFactory;
+// import org.java_websocket.client.DefaultSSLWebSocketClientFactory;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -16,7 +16,8 @@ class WebsocketTransport extends WebSocketClient implements IOTransport {
     private final static Pattern PATTERN_HTTP = Pattern.compile("^http");
     public static final String TRANSPORT_NAME = "websocket";
     private IOConnection connection;
-    public static IOTransport create(URL url, IOConnection connection) {
+
+    public static IOTransport create(URL url, IOConnection connection) throws IOException {
         URI uri = URI.create(
                 PATTERN_HTTP.matcher(url.toString()).replaceFirst("ws")
                 + IOConnection.SOCKET_IO_1 + TRANSPORT_NAME
@@ -25,12 +26,14 @@ class WebsocketTransport extends WebSocketClient implements IOTransport {
         return new WebsocketTransport(uri, connection);
     }
 
-    public WebsocketTransport(URI uri, IOConnection connection) {
+    public WebsocketTransport(URI uri, IOConnection connection) throws IOException {
         super(uri);
         this.connection = connection;
         SSLContext context = IOConnection.getSslContext();
         if("wss".equals(uri.getScheme()) && context != null) {
-	        this.setWebSocketFactory(new DefaultSSLWebSocketClientFactory(context));
+            SSLSocketFactory defaultSSLSocketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+            this.setSocket(defaultSSLSocketFactory.createSocket());
+	        // this.setWebSocketFactory(new DefaultSSLWebSocketClientFactory(context));
         }
     }
 
