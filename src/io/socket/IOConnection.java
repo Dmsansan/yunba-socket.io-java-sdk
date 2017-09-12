@@ -334,7 +334,11 @@ class IOConnection implements IOCallback {
 			return;
 		setState(STATE_CONNECTING);
 		if (protocols.contains(WebsocketTransport.TRANSPORT_NAME))
-			transport = WebsocketTransport.create(url, this);
+			try {
+				transport = WebsocketTransport.create(url, this);
+			} catch (IOException exception) {
+				error(new SocketIOException("Error while connect", exception));
+			}
 		else if (protocols.contains(XhrTransport.TRANSPORT_NAME))
 			transport = XhrTransport.create(url, this);
 		else {
